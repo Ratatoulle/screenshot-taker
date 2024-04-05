@@ -4,7 +4,7 @@ from selenium.webdriver import Firefox
 from time import sleep
 import os
 
-png_path = "png/"
+png_path = "../png/"
 
 
 def safe_mkdir(path: str):
