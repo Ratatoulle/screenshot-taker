@@ -1,16 +1,18 @@
 from selenium import webdriver
 from selenium.common.exceptions import InvalidArgumentException, WebDriverException
-from selenium.webdriver import Firefox
 from time import sleep
-from dataclasses import dataclass
 from selenium_work.url.helper import add_protocol
+
 
 class ScreenshotTaker:
 
     def __init__(self):
         self.driver = webdriver.Firefox()
 
-    def __del__(self):
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
         self.driver.quit()
 
     def take_from(self, url: str, filename: str, save_path: str, *, sleep_time: int = 5) -> bool:
