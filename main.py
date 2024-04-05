@@ -1,5 +1,5 @@
 from selenium import webdriver
-from selenium.common.exceptions import InvalidArgumentException
+from selenium.common.exceptions import InvalidArgumentException, WebDriverException
 from selenium.webdriver import Firefox
 from time import sleep
 import os
@@ -33,14 +33,16 @@ def take_screenshot_from(url: str, driver: Firefox, filename: str, save_path: st
         try:
             url = add_protocol(url)
             driver.get(url)
-        except InvalidArgumentException:
-            print("Invalid URL")
+        except (InvalidArgumentException, WebDriverException):
+            print(f"URL {url} is invalid")
+            return False
     safe_mkdir(save_path)
     sleep(sleep_time)
     return driver.get_screenshot_as_file(save_path + filename + ".png")
 
 
 urls = [
+    "kermofnwe",
     "https://vk.com",
     "https://74.ru",
     "https://youtube.com",
@@ -49,6 +51,9 @@ urls = [
 
 driver = webdriver.Firefox()
 
+
+# filename = get_domen_name(urls[0])
+# take_screenshot_from(urls[0], driver, filename, png_path)
 for url in urls:
     filename = get_domen_name(url)
     take_screenshot_from(url, driver, filename, png_path)
