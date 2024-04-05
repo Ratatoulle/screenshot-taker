@@ -2,7 +2,28 @@ from selenium import webdriver
 from selenium.common.exceptions import InvalidArgumentException, WebDriverException
 from selenium.webdriver import Firefox
 from time import sleep
-import os
+from dataclasses import dataclass
+
+DRIVER_TYPE = Firefox
+
+
+@dataclass
+class ScreenshotTaker:
+    driver: DRIVER_TYPE
+
+    def take_from(self, url: str, filename: str, save_path: str, *, sleep_time: int = 5) -> bool:
+        try:
+            self.driver.get(url)
+        except InvalidArgumentException:
+            try:
+                url = add_protocol(url)
+                self.driver.get(url)
+            except (InvalidArgumentException, WebDriverException):
+                print(f"URL {url} is invalid")
+                return False
+        sleep(sleep_time)
+        return self.driver.get_screenshot_as_file(save_path + filename + ".png")
+
 
 def get_domen_name(url: str) -> str:
     import re
