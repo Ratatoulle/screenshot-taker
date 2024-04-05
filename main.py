@@ -37,8 +37,7 @@ def take_screenshot_from(url: str, driver: Firefox, filename: str, save_path: st
             print("Invalid URL")
     safe_mkdir(save_path)
     sleep(sleep_time)
-    result = driver.get_screenshot_as_file(save_path + filename + ".png")
-    return result
+    return driver.get_screenshot_as_file(save_path + filename + ".png")
 
 
 urls = [
@@ -47,8 +46,6 @@ urls = [
     "https://youtube.com",
     "https://habr.com",
 ]
-
-delay = 0
 
 driver = webdriver.Firefox()
 
