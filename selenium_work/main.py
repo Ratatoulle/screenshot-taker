@@ -4,11 +4,18 @@ from time import sleep
 from url.helper import get_domen_name, add_protocol
 
 DRIVER = webdriver.Chrome
+OPTIONS = webdriver.ChromeOptions
+
 
 class ScreenshotTaker:
 
     def __init__(self):
         self.driver = DRIVER()
+        self.options = OPTIONS()
+        self.init_options()
+
+    def init_options(self):
+        self.options.add_argument("--headless")
 
     def __enter__(self):
         return self
@@ -26,7 +33,6 @@ class ScreenshotTaker:
             except (InvalidArgumentException, WebDriverException):
                 print(f"URL {url} is invalid")
                 return False
-        # self.driver.get(url)
         sleep(sleep_time)
         return self.driver.get_screenshot_as_file(save_path + filename + ".png")
 
@@ -38,19 +44,6 @@ urls = [
     "https://ura.news",
 ]
 
-# driver = webdriver.ChromiumEdge()
-# url = urls[0]
-# filename = get_domen_name(url)
-# driver.get(url)
-
-# driver = webdriver.Firefox()
-# for url in urls:
-#     filename = get_domen_name(url)
-#     driver.get(url)
-#     if driver.get_screenshot_as_file("png/" + filename + ".png"):
-#         print(f"Screenshot for {url} was successfully taken!")
-
-# taker.stop()
 with ScreenshotTaker() as taker:
     for url in urls:
         filename = get_domen_name(url)
