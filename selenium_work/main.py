@@ -10,12 +10,12 @@ OPTIONS = webdriver.ChromeOptions
 class ScreenshotTaker:
 
     def __init__(self):
-        self.driver = DRIVER()
         self.options = OPTIONS()
         self.init_options()
+        self.driver = DRIVER(self.options)
 
     def init_options(self):
-        self.options.add_argument("--headless")
+        self.options.add_argument("--headless=new")
 
     def __enter__(self):
         return self

@@ -5,12 +5,18 @@ services:
     container_name: http_api
     depends_on:
       - postgres_db
+      - selenium
 
   selenium:
     container_name: selenium_work
 
   minio:
     container_name: minio
+    build:
+      dockerfile: ./minio/Dockerfile
+    volumes:
+      - minio_data:/bitnami/minio/data
+
 
   postgres_db:
     image: postgres:latest
@@ -24,3 +30,7 @@ services:
     volumes:
       - "./dump/:/docker-entrypoint-initdb.d/"
       - screenshot_db_data:/var/lib/postgresql/data
+volumes:
+  screenshot_db_data:
+
+  minio_data:
