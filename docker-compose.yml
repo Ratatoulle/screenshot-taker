@@ -15,7 +15,7 @@ services:
       - minio
       - postgres_db
     build:
-      dockerfile: src/selenium_work/Dockerfile
+      dockerfile: ./selenium_work/Dockerfile
 
   minio:
     container_name: minio_work
@@ -27,7 +27,7 @@ services:
       - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
       - MINIO_BUCKET_NAME=${MINIO_BUCKET_NAME}
     build:
-      dockerfile: src/minio_work/Dockerfile
+      dockerfile: minio_work/Dockerfile
     volumes:
       - minio_data:/bitnami/minio_work/data
 
