@@ -6,6 +6,7 @@ from time import sleep
 DRIVER = webdriver.Chrome
 OPTIONS = webdriver.ChromeOptions
 
+
 def take_from(url: str, *, sleep_time: int = 10) -> bytes | bool:
     options = OPTIONS()
     options.add_argument("--headless=new")
