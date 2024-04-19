@@ -6,8 +6,12 @@ services:
     depends_on:
       - postgres_db
       - selenium
+      - minio
+    ports:
+      - "8000:8000"
+    restart: on-failure
     command:
-      uvicorn http_api.main:app --reload
+      python3 main.py
 
   selenium:
     container_name: selenium_work
@@ -16,6 +20,7 @@ services:
       - postgres_db
     build:
       dockerfile: ./selenium_work/Dockerfile
+    restart: on-failure
 
   minio:
     container_name: minio_work
@@ -27,7 +32,7 @@ services:
       - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
       - MINIO_BUCKET_NAME=${MINIO_BUCKET_NAME}
     build:
-      dockerfile: minio_work/Dockerfile
+      dockerfile: ./minio_work/Dockerfile
     volumes:
       - minio_data:/bitnami/minio_work/data
 
