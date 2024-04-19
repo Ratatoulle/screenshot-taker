@@ -6,16 +6,30 @@ services:
     depends_on:
       - postgres_db
       - selenium
+    command:
+      uvicorn http_api.main:app --reload
 
   selenium:
     container_name: selenium_work
+    depends_on:
+      - minio
+      - postgres_db
+    build:
+      dockerfile: ./selenium_work/Dockerfile
 
   minio:
-    container_name: minio
+    container_name: minio_work
+    ports:
+      - "9000:9000"
+    environment:
+      - MINIO_HTTP=${MINIO_HTTP}
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+      - MINIO_BUCKET_NAME=${MINIO_BUCKET_NAME}
     build:
-      dockerfile: ./minio/Dockerfile
+      dockerfile: minio_work/Dockerfile
     volumes:
-      - minio_data:/bitnami/minio/data
+      - minio_data:/bitnami/minio_work/data
 
 
   postgres_db:
