@@ -21,7 +21,8 @@ def take_from(request: query_model = Depends()):
     url = params["url"]
     filename = get_domen_name(url) + ".png"
     if not params["is_fresh"]:
-        image = MinioHelper().get_from(filename)
+        helper = MinioHelper()
+        image = helper.get_from(filename)
         if image:
             return StreamingResponse(image, media_type="image/png")
         else:
