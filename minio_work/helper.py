@@ -22,9 +22,6 @@ class MinioHelper:
         found = self.client.bucket_exists(self.bucket_name)
         if not found:
             self.client.make_bucket(self.bucket_name)
-            print(f"Created bucket {self.bucket_name}")
-        else:
-            print(f"Bucket {self.bucket_name} already exists")
 
     def save_to(self, name: str, data: bytes):
         data_stream = BytesIO(data)
@@ -37,18 +34,3 @@ class MinioHelper:
             return None
         else:
             return obj
-
-
-def main():
-    src = "test-file.txt"
-    dst = "500.txt"
-
-    helper = MinioHelper()
-    helper.save_to(dst, src)
-
-
-if __name__ == "__main__":
-    try:
-        main()
-    except S3Error as e:
-        print("Error occured: ", e)
