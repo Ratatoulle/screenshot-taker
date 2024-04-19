@@ -11,7 +11,7 @@ def take_from(url: str, *, sleep_time: int = 10) -> bytes | bool:
     options = OPTIONS()
     options.add_argument("--headless=new")
     options.add_argument("--enable-chrome-browser-cloud-management")
-    driver = DRIVER(options)
+    driver = DRIVER(options=options)
     try:
         driver.get(url)
     except InvalidArgumentException:
@@ -19,7 +19,6 @@ def take_from(url: str, *, sleep_time: int = 10) -> bytes | bool:
             url = add_protocol(url)
             driver.get(url)
         except (InvalidArgumentException, WebDriverException):
-            print(f"URL {url} is invalid")
             return False
     sleep(sleep_time)
     return driver.get_screenshot_as_png()

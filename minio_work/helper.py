@@ -19,8 +19,9 @@ class MinioHelper:
         self.create_bucket()
 
     def create_bucket(self):
-        found = self.client.bucket_exists(self.bucket_name)
-        if not found:
+        try:
+            found = self.client.bucket_exists(self.bucket_name)
+        except S3Error:
             self.client.make_bucket(self.bucket_name)
 
     def save_to(self, name: str, data: bytes):

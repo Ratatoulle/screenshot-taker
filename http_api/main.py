@@ -25,11 +25,15 @@ def take_from(request: query_model = Depends()):
         if image:
             return StreamingResponse(image, media_type="image/png")
         else:
-            return Response(content="No such file on server, set is_fresh flag to True to make new screenshot.")
+            return Response(content="No such file on server, set is_fresh flag to True to make new screenshot.",
+                            status_code=status.HTTP_400_BAD_REQUEST)
     minio_helper = MinioHelper()
     db_helper = DBHelper()
 
     image_bytes = screenshot.take_from(url, sleep_time=10)
+
+    if not image_bytes:
+        return Response(content="Could not resolve hostname", status_code=status.HTTP_400_BAD_REQUEST)
 
     minio_helper.save_to(filename, image_bytes)
     minio_path = minio_helper.bucket_name + "/" + filename
