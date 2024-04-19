@@ -1,5 +1,4 @@
 from selenium_work.url.helper import get_domen_name
-from selenium_work.screenshot import ScreenshotTaker
 from selenium_work import screenshot
 from minio_work.helper import MinioHelper
 from database.helper import DBHelper
@@ -17,27 +16,16 @@ query_model = create_model("Query", **query_params)
 
 
 @app.get("/take_from")
-         # responses={
-         #     200: {
-         #         "content": {"image/png": {}}
-         #     }
-         # },
-         # response_class=Response)
 def take_from(request: query_model = Depends()):
     params = request.dict()
     url = params["url"]
     filename = get_domen_name(url) + ".png"
     if not params["is_fresh"]:
-        # image_bytes = get_image_bytes(filename)
         image = MinioHelper().get_from(filename)
-
-        # if image:
-        #     return Response(content=image, media_type="image/png")
         if image:
             return StreamingResponse(image, media_type="image/png")
         else:
             return Response(content="No such file on server, set is_fresh flag to True to make new screenshot.")
-    # with ScreenshotTaker() as taker:
     minio_helper = MinioHelper()
     db_helper = DBHelper()
 
