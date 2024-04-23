@@ -8,33 +8,48 @@ services:
       - selenium
       - minio
     ports:
-      - "8000:8000"
+      - "80:80"
+    build:
+      dockerfile: ./http_api/Dockerfile
+    environment:
+      - MINIO_HTTP=minio
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+      - MINIO_BUCKET_NAME=${MINIO_BUCKET_NAME}
+      - POSTGRES_USER=${DB_USERNAME}
+      - SE_HOST=selenium
+      - DB_HOST=pgdb
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_DATABASE}
     restart: on-failure
     command:
-      python3 main.py
+      python3 http_api/main.py
 
   selenium:
-    container_name: selenium_work
-    depends_on:
-      - minio
-      - postgres_db
-    build:
-      dockerfile: ./selenium_work/Dockerfile
-    restart: on-failure
+    container_name: selenium
+    image: selenium/standalone-chrome:latest
+    shm_size: 2gb
+    ports:
+      - "4444:4444"
+    # restart: on-failure
 
   minio:
-    container_name: minio_work
+    container_name: minio
+    image: 'minio/minio:latest'
     ports:
       - "9000:9000"
+      - "9001:9001"
+    expose:
+      - "9000"
     environment:
       - MINIO_HTTP=${MINIO_HTTP}
       - MINIO_ROOT_USER=${MINIO_ROOT_USER}
       - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
       - MINIO_BUCKET_NAME=${MINIO_BUCKET_NAME}
-    build:
-      dockerfile: ./minio_work/Dockerfile
     volumes:
-      - minio_data:/bitnami/minio_work/data
+      - minio_data:/data
+    # restart: on-failure
+    command: server /data --console-address ":9001"
 
 
   postgres_db:
@@ -49,6 +64,8 @@ services:
     volumes:
       - "./dump/:/docker-entrypoint-initdb.d/"
       - screenshot_db_data:/var/lib/postgresql/data
+    # restart: on-failure
+
 volumes:
   screenshot_db_data:
 

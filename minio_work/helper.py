@@ -10,8 +10,9 @@ USE_HTTPS = False
 class MinioHelper:
 
     def __init__(self):
-        load_dotenv()
-        self.client = Minio(endpoint=os.environ.get("MINIO_HTTP"),
+        # load_dotenv()
+        self.client = Minio(
+                            endpoint=f"{os.environ.get('MINIO_HTTP')}:9000",
                             access_key=os.environ.get("MINIO_ROOT_USER"),
                             secret_key=os.environ.get("MINIO_ROOT_PASSWORD"),
                             secure=USE_HTTPS)
@@ -34,3 +35,7 @@ class MinioHelper:
             return None
         else:
             return obj
+
+
+if __name__ == "__main__":
+    helper = MinioHelper()

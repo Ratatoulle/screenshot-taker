@@ -1,3 +1,0 @@
-in root directory of project:
-
-    $ uvicorn http_api.main:app --reload

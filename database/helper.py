@@ -12,7 +12,7 @@ class DBHelper:
         Class for establishing connection with database
     """
     def __init__(self):
-        load_dotenv()
+        # load_dotenv()
         self._db_info: dict = {name: value for name, value in os.environ.items() if "DB" in name}
         self._url: URL = URL.create(
             drivername=self._db_info['DB_DRIVERNAME'],

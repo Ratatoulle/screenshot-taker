@@ -2,16 +2,27 @@ from selenium import webdriver
 from selenium.common.exceptions import InvalidArgumentException, WebDriverException
 from .url.helper import add_protocol
 from time import sleep
+from dotenv import load_dotenv
+import os
 
-DRIVER = webdriver.Chrome
+load_dotenv()
+
+DRIVER = webdriver.Remote
 OPTIONS = webdriver.ChromeOptions
+
+se_port = os.environ.get("SE_PORT")
+se_host = os.environ.get("SE_HOST")
+
+IN_CONTAINER = True
 
 
 def take_from(url: str, *, sleep_time: int = 10) -> bytes | bool:
     options = OPTIONS()
     options.add_argument("--headless=new")
-    options.add_argument("--enable-chrome-browser-cloud-management")
-    driver = DRIVER(options=options)
+    if IN_CONTAINER:
+        driver = DRIVER(options=options, command_executor=f"http://{se_host}:{se_port}")
+    else:
+        driver = DRIVER(options=options)
     try:
         driver.get(url)
     except InvalidArgumentException:
@@ -22,3 +33,4 @@ def take_from(url: str, *, sleep_time: int = 10) -> bytes | bool:
             return False
     sleep(sleep_time)
     return driver.get_screenshot_as_png()
+
