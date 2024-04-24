@@ -31,6 +31,12 @@ def take_from(url: str, *, sleep_time: int = 10) -> bytes | bool:
             driver.get(url)
         except (InvalidArgumentException, WebDriverException):
             return False
-    sleep(sleep_time)
-    return driver.get_screenshot_as_png()
-
+        sleep(sleep_time)
+        image = driver.get_screenshot_as_png()
+        if not image:
+            return False
+        else:
+            return image
+    finally:
+        driver.close()
+        driver.quit()

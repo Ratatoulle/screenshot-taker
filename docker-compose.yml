@@ -31,7 +31,7 @@ services:
     shm_size: 2gb
     ports:
       - "4444:4444"
-    # restart: on-failure
+    restart: always
 
   minio:
     container_name: minio
@@ -48,7 +48,6 @@ services:
       - MINIO_BUCKET_NAME=${MINIO_BUCKET_NAME}
     volumes:
       - minio_data:/data
-    # restart: on-failure
     command: server /data --console-address ":9001"
 
 
@@ -64,7 +63,6 @@ services:
     volumes:
       - "./dump/:/docker-entrypoint-initdb.d/"
       - screenshot_db_data:/var/lib/postgresql/data
-    # restart: on-failure
 
 volumes:
   screenshot_db_data:

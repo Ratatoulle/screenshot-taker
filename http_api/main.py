@@ -14,6 +14,9 @@ query_params = {"url": (str, "example.com"),
 
 query_model = create_model("Query", **query_params)
 
+minio_helper = MinioHelper()
+db_helper = DBHelper()
+
 
 @app.get("/take_from")
 def take_from(request: query_model = Depends()):
@@ -27,8 +30,6 @@ def take_from(request: query_model = Depends()):
             return StreamingResponse(image, media_type="image/png")
         else:
             return Response(status_code=status.HTTP_400_BAD_REQUEST)
-    minio_helper = MinioHelper()
-    db_helper = DBHelper()
 
     image_bytes = screenshot.take_from(url, sleep_time=5)
 
@@ -44,8 +45,6 @@ def take_from(request: query_model = Depends()):
 
 
 def main():
-    minio_helper = MinioHelper()
-    db_helper = DBHelper()
     uvicorn.run(app, host="0.0.0.0", port=80)
 
 
