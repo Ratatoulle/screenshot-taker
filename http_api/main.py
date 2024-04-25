@@ -1,10 +1,10 @@
-from selenium_work.url.helper import make_valid_name
 from selenium_work import screenshot
 from minio_work.helper import MinioHelper
 from database.helper import DBHelper
 from fastapi import FastAPI, Depends, status, Response
 from fastapi.responses import StreamingResponse
 from pydantic import create_model
+import hashlib
 import uvicorn
 
 app = FastAPI()
@@ -22,7 +22,7 @@ db_helper = DBHelper()
 def take_from(request: query_model = Depends()):
     params = request.dict()
     url = params["url"]
-    filename = make_valid_name(url) + ".png"
+    filename = hashlib.md5(url.encode()).hexdigest() + ".png"
     if not params["is_fresh"]:
         helper = MinioHelper()
         image = helper.get_from(filename)

@@ -2,7 +2,6 @@ from minio import Minio
 from minio.error import S3Error
 from io import BytesIO
 import os
-from dotenv import load_dotenv
 
 USE_HTTPS = False
 
@@ -10,7 +9,6 @@ USE_HTTPS = False
 class MinioHelper:
 
     def __init__(self):
-        # load_dotenv()
         self.client = Minio(
                             endpoint=f"{os.environ.get('MINIO_HTTP')}:9000",
                             access_key=os.environ.get("MINIO_ROOT_USER"),
@@ -31,7 +29,8 @@ class MinioHelper:
     def get_from(self, name: str):
         try:
             obj = self.client.get_object(self.bucket_name, name)
-        except S3Error:
+        except S3Error as e:
+            print("MinIO error occured: ", e)
             return None
         else:
             return obj
