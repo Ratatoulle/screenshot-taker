@@ -31,7 +31,7 @@ async def take_from(request: query_model = Depends()):
         else:
             return Response(status_code=status.HTTP_400_BAD_REQUEST)
 
-    image_bytes = screenshot.take_from(url, sleep_time=5)
+    image_bytes = await screenshot.take_from(url, sleep_time=5)
 
     if not image_bytes:
         return Response(status_code=status.HTTP_400_BAD_REQUEST)
