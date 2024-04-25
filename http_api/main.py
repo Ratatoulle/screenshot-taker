@@ -19,7 +19,7 @@ db_helper = DBHelper()
 
 
 @app.get("/take_from")
-def take_from(request: query_model = Depends()):
+async def take_from(request: query_model = Depends()):
     params = request.dict()
     url = params["url"]
     filename = hashlib.md5(url.encode()).hexdigest() + ".png"

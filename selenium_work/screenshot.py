@@ -34,6 +34,6 @@ def take_from(url: str, *, sleep_time: int = 10) -> bytes | bool:
         sleep(sleep_time)
         image = driver.get_screenshot_as_png()
     finally:
-        # driver.close()
+        driver.close()
         driver.quit()
     return image
